@@ -1,0 +1,8 @@
+PUT http://localhost:3000/media/21 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "The Lighthouse",
+    "type": "DVD",
+    "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
+}
