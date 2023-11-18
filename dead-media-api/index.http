@@ -1,8 +1,21 @@
-PUT http://localhost:3000/media/21 HTTP/1.1
-content-type: application/json
+# PUT http://localhost:23720/media/21 HTTP/1.1
+# content-type: application/json
 
-{
-    "name": "The Lighthouse",
-    "type": "DVD",
-    "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
-}
+# {
+#     "name": "The Lighthouse",
+#     "type": "DVD",
+#     "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
+# }
+
+# GET http://localhost:23720/media/19
+
+# POST http://localhost:23720/media HTTP/1.1
+# content-type: application/json
+
+# {
+#     "name": "The Lighthouse",
+#     "type": "DVD",
+#     "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
+# }
+
+DELETE http://localhost:23720/media/0 
