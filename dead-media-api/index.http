@@ -18,4 +18,4 @@
 #     "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
 # }
 
-DELETE http://localhost:23720/media/0 
+GET  http://localhost:23720/media?type=DVD&limit=5&offset=9
