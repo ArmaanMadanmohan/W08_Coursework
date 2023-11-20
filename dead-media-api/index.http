@@ -9,13 +9,12 @@
 
 # GET http://localhost:23720/media/19
 
-# POST http://localhost:23720/media HTTP/1.1
-# content-type: application/json
+POST http://localhost:23720/transfer HTTP/1.1
+content-type: application/json
 
-# {
-#     "name": "The Lighthouse",
-#     "type": "DVD",
-#     "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
-# }
+{
+    "source": "/media/0",
+    "target": "https://am679.teaching.cs.st-andrews.ac.uk:23720/media"
+}
 
-GET  http://localhost:23720/media?type=DVD&limit=5&offset=9
+# GET  http://localhost:23720/media?type=DVD&limit=5&offset=9

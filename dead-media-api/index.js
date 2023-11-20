@@ -7,7 +7,9 @@
 //pagination should work with search query (i.e. count is 4 for 4 results)
 //Q3
 
-const express = require("express");
+// const request = require("supertest");
+// const fetch = (...args) =>
+	// import('node-fetch').then(({default: fetch}) => fetch(...args));const express = require("express");
 const path = require('path');
 const fs = require('fs');
 
@@ -18,6 +20,7 @@ app.use(express.json());
 //headers?
 
 const MediaStore = require('./store.js').MediaStore;
+// const ___; for importing
 const store = new MediaStore(false); //code must be robust against store suddenly going into error mode. 
 //try with true & skip past error parsing
 
@@ -192,9 +195,39 @@ app.listen(port, function () {
     console.log(`Server is running on port ${port}`)
 });
 
+app.post('/transfer', async (req, res) => {
+    try {
+        const { source, target } = req.body;
+        const toTarget = await request(app).get(source)
+
+
+        //     await fetch("http://localhost:" + port + source);
+        // if (toTarget.ok) {
+        //     const data = await toTarget.json();
+        //     console.log(data);
+        // }
+        //blocking
+        
+        // var fromTarget = await fetch(target, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(toTarget),
+        // });
+        console.log(JSON.stringify(toTarget));
+    } catch (error) {
+        console.log(error);
+    }
+    //don't store transfer objects in a store. 
+    //returned from target server 
+})
+
+// request(app).post('/transfer)
 
 
 
-// if (error === `Error: cannot find media with ID: ${req.params.id}`) { //unnecessary?
+// if (error === `Error: cannot find media with ID: ${req.params.id}`) { 
 //     res.status(404).send();
 // }
+
