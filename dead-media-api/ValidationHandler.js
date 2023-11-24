@@ -10,7 +10,7 @@ class ValidationHandler {
      */
     constructor(store) {
         this.store = store;
-        this.idsSet = new Set();
+        this.idSet = new Set();
     }
 
     /**
@@ -125,11 +125,16 @@ class ValidationHandler {
     async populateStore(jsonData) { 
         this.validateDataSet(jsonData)
         for (const mediaObject of jsonData) {
-            const { name, type, desc } = mediaObject;
-            const id = await this.store.create(name, type, desc);
-            this.idsSet.add(id);
+            try {
+                const { name, type, desc } = mediaObject;
+                const id = await this.store.create(name, type, desc);
+                this.idSet.add(id);
+            } catch (error) {
+                console.log("Error populating store.");
+                process.exit(1);
+            }
         }
-        return this.idsSet; 
+        return this.idSet; 
     }
 
     /**

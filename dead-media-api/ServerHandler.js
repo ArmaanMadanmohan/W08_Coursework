@@ -50,6 +50,13 @@ class ServerHandler {
     createServer() {
         const app = express();
         app.use(express.json());
+        app.use((err, req, res, next) => {
+            if (err instanceof SyntaxError) {
+                res.status(400).send();
+            } else {
+                next();
+            }
+        })
 
         // GET endpoint for retrieving media objects with optional query parameters
         app.get('/media', async (req, res) => {
@@ -59,7 +66,7 @@ class ServerHandler {
 
                 const returnedObjects = await this.store.retrieveAll();
 
-                const filteredObjects = returnedObjects.filter(mediaObject => { //encode URL?
+                const filteredObjects = returnedObjects.filter(mediaObject => { 
                     const matchName = req.query.name ? mediaObject.name.toLowerCase() === decodeURIComponent(req.query.name).toLowerCase() : true;
                     const matchType = req.query.type ? mediaObject.type.toLowerCase() === decodeURIComponent(req.query.type).toLowerCase() : true;
                     const matchDesc = req.query.desc ? mediaObject.desc.toLowerCase().includes(decodeURIComponent(req.query.desc).toLowerCase()) : true;
@@ -97,7 +104,7 @@ class ServerHandler {
                 return;
             }
         })
-        
+
         // GET endpoint for retrieving a single media object by ID
         app.get('/media/:id', async (req, res) => {
             try {
@@ -184,7 +191,7 @@ class ServerHandler {
                     return;
                 }
 
-                const id = Number(source.split('/')[2]); 
+                const id = Number(source.split('/')[2]);
 
                 if (!this.ids.has(id)) {
                     res.status(404).send();
@@ -198,7 +205,7 @@ class ServerHandler {
                         "content-type": "application/json",
                     },
                     body: JSON.stringify(formattedObject),
-                })
+                });
 
                 const response = await fromTarget.json();
 
@@ -207,7 +214,7 @@ class ServerHandler {
 
                 await this.store.delete(id);
                 this.ids.delete(id);
-                res.status(200).json(response); 
+                res.status(200).json(response);
 
             } catch (error) {
                 if (error instanceof fetch.FetchError) {

@@ -11,9 +11,6 @@ let jsonData;
 let mockStore;
 let validator;
 
-//test with other people (R10)
-//when running test suite, why do two console.logs show up?
-
 beforeEach(async () => {
     mockStore = new MediaStore();
     validator = new ValidationHandler(mockStore);
@@ -373,6 +370,12 @@ describe('POST /media', () => {
         expect(response.statusCode).toBe(400);
     })
 
+    it('should return a 400 status for non-JSON object', async () => {
+        jsonMedia = "hi";
+        const response = await request(app).post('/media').send(jsonMedia);
+        expect(response.statusCode).toBe(400);
+    })
+
     it('should return a 500 status with error mode on', async () => {
         jsonMedia = {
             "name": "The Lighthouse",
@@ -512,6 +515,12 @@ describe('PUT /media/:id', () => {
         expect(response.statusCode).toBe(400);
     })
 
+    it('should return a 400 status for non-JSON object', async () => {
+        jsonMedia = "hi";
+        const response = await request(app).put('/media/1').send(jsonMedia);
+        expect(response.statusCode).toBe(400);
+    })
+
     it('should return a 404 status if the media to be changed does not exist', async () => {
         jsonMedia = {
             "name": "Electric Light Orchestra - Time",
@@ -600,7 +609,13 @@ describe('validation', () => {
         expect(idsSet.has(20)).toBe(true); 
         expect(idsSet.has(21)).toBe(true);
         expect(idsSet.has(22)).toBe(false);
-    })
+    }) 
+
+    //invalid json
+
+    //error mode on populating store
 })
 
 //difficult to track console.log output
+
+//--verbose  
