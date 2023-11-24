@@ -1,13 +1,38 @@
-# PUT http://localhost:23720/media/10 HTTP/1.1
+# PUT http://ab556.teaching.cs.st-andrews.ac.uk:24033/transfer HTTP/1.1
 # content-type: application/json
 
 # {
-#     "name": "The Lighthouse",
-#     "type": "DVD",
-#     "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
+#     "name": "VHS101",
+#     "type": "TAPE",
+#     "desc": "Recording of Christmas dinner with family."
 # }
 
-# GET http://localhost:23720/media?type=DVD&name=Fight%20CLUB
+
+
+
+//what do they mean by "containing the resources from index offset to offset + limit (excluding the resource at offset + limit)."
+//does 2+0 exclude index 2? doesn't make sense since index is position 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# GET http://localhost:23720/media/21
 
 # POST http://localhost:23720/transfer HTTP/1.1
 # content-type: application/json
@@ -21,15 +46,15 @@
 
 # validation check for making sure they input /media/number
 
-# POST http://localhost:23720/transfer HTTP/1.1
-# content-type: application/json
+POST http://localhost:23720/transfer HTTP/1.1
+content-type: application/json
 
-# {
-#     "source": "hidwhdw/media/400", 
-#     "target": "http://localhost:23720/media"
-# }
+{
+    "source": "/media/15", 
+    "target": "http://ab556.teaching.cs.st-andrews.ac.uk:24033/media"
+}
 
-# GET http://localhost:23720/media/14
+GET http://ab556.teaching.cs.st-andrews.ac.uk:24033/media/20
 
 # GET  http://localhost:23720/media?offset=2
 

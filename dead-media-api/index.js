@@ -11,10 +11,10 @@ const validator = new ValidationHandler(store);
 validator.run(process.argv).then((ids) => {
     const injector = new ServerHandler(store, ids);
 
-    //creates server using returned ID set
+    //Creates server using returned ID set
     const server = injector.createServer();
 
-    //sets port number
+    //Sets port number
     const port = 23720;
 
     server.listen(port, () => {

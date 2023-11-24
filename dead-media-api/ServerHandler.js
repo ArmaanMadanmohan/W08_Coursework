@@ -5,6 +5,11 @@ const fetch = require('node-fetch');
 
 const ValidationHandler = require("./ValidationHandler.js");
 
+/**
+ * Formats a media object for response.
+ * @param {Object} media - The media object to format.
+ * @returns {Object} - The formatted media object.
+ */
 const formattedMediaObject = media => ({
     id: `/media/${media.id}`,
     name: media.name,
@@ -14,6 +19,11 @@ const formattedMediaObject = media => ({
 
 class ServerHandler {
 
+    /**
+     * Constructs a ServerHandler instance.
+     * @param {Object} store - The data store to use.
+     * @param {Set} ids - The set of IDs.
+     */
     constructor(store, ids) {
         this.store = store;
         this.ids = ids;
@@ -22,18 +32,26 @@ class ServerHandler {
         this.validator = new ValidationHandler(this.store);
     }
 
+    /**
+     * Retrieves a formatted media object by ID.
+     * @param {number} id - The ID of the media object.
+     * @returns {Object} - The formatted media object.
+     */
     async getMedia(id) {
         const returnedMedia = await this.store.retrieve(id);
         const formattedObject = formattedMediaObject(returnedMedia);
         return formattedObject;
     }
 
+    /**
+     * Creates an Express server.
+     * @returns {Object} - The Express app.
+     */
     createServer() {
         const app = express();
         app.use(express.json());
 
-
-
+        // GET endpoint for retrieving media objects with optional query parameters
         app.get('/media', async (req, res) => {
             try {
                 let queryLimit = Number(req.query.limit) || this.defaultLimit;
@@ -42,9 +60,9 @@ class ServerHandler {
                 const returnedObjects = await this.store.retrieveAll();
 
                 const filteredObjects = returnedObjects.filter(mediaObject => { //encode URL?
-                    const matchName = req.query.name ? mediaObject.name.toLowerCase() === req.query.name.toString().toLowerCase() : true;
-                    const matchType = req.query.type ? mediaObject.type.toLowerCase() === req.query.type.toString().toLowerCase() : true;
-                    const matchDesc = req.query.desc ? mediaObject.desc.toLowerCase().includes(req.query.desc.toString().toLowerCase()) : true;
+                    const matchName = req.query.name ? mediaObject.name.toLowerCase() === decodeURIComponent(req.query.name).toLowerCase() : true;
+                    const matchType = req.query.type ? mediaObject.type.toLowerCase() === decodeURIComponent(req.query.type).toLowerCase() : true;
+                    const matchDesc = req.query.desc ? mediaObject.desc.toLowerCase().includes(decodeURIComponent(req.query.desc).toLowerCase()) : true;
 
                     return matchName && matchType && matchDesc;
                 });
@@ -66,10 +84,6 @@ class ServerHandler {
                 const next = (queryOffset + queryLimit < totalCount) ? `/media?limit=${queryLimit}&offset=${queryOffset + queryLimit}` : null;
                 const previous = (queryOffset > 0) ? `/media?limit=${queryOffset < queryLimit ? queryOffset : queryLimit}&offset=${queryOffset < queryLimit ? 0 : queryOffset - queryLimit}` : null;
 
-                // if (paginatedResources.length === 0) { //necessary?
-                //     return res.status(204).end();
-                // }
-
                 const formattedResponse = {
                     count: totalCount,
                     next: next,
@@ -83,7 +97,8 @@ class ServerHandler {
                 return;
             }
         })
-
+        
+        // GET endpoint for retrieving a single media object by ID
         app.get('/media/:id', async (req, res) => {
             try {
                 const id = Number(req.params.id);
@@ -99,12 +114,13 @@ class ServerHandler {
             }
         })
 
+        // PUT endpoint for updating a media object by ID
         app.put('/media/:id', async (req, res) => {
             try {
                 const id = Number(req.params.id);
                 if (!this.validator.isValidObject(req.body, false)) {
                     res.status(400).send();
-                    return
+                    return;
                 }
 
                 const { name, type, desc } = req.body;
@@ -122,6 +138,7 @@ class ServerHandler {
             }
         })
 
+        // DELETE endpoint for deleting a media object by ID
         app.delete('/media/:id', async (req, res) => {
             try {
                 const id = Number(req.params.id);
@@ -137,11 +154,12 @@ class ServerHandler {
             }
         })
 
+        // POST endpoint for creating a new media object
         app.post('/media', async (req, res) => {
             try {
                 if (!this.validator.isValidObject(req.body, false)) {
                     res.status(400).send();
-                    return;                     //where else to put return?
+                    return;
                 }
                 const { name, type, desc } = req.body;
 
@@ -155,6 +173,7 @@ class ServerHandler {
             }
         })
 
+        // POST endpoint for transferring a media object to another server
         app.post('/transfer', async (req, res) => {
             try {
                 const { source, target } = req.body;
@@ -185,7 +204,6 @@ class ServerHandler {
 
                 const splitID = (response.id).split('/')[2];
                 response.id = `${target}/${splitID}`;
-
 
                 await this.store.delete(id);
                 this.ids.delete(id);

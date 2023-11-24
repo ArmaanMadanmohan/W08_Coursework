@@ -11,9 +11,8 @@ let jsonData;
 let mockStore;
 let validator;
 
-//test with other people
-
-//TAPE --> PUT or POST
+//test with other people (R10)
+//when running test suite, why do two console.logs show up?
 
 beforeEach(async () => {
     mockStore = new MediaStore();
@@ -31,7 +30,7 @@ afterEach(async () => {
     server.close();
 })
 
-describe('GET /media', () => { //rewrite descriptions?
+describe('GET /media', () => { //URI Component testing
     it('should respond with a paginated list of media objects', async () => {
         const response = await request(app).get('/media')
         expect(response.statusCode).toBe(200);
@@ -278,6 +277,27 @@ describe('GET /media', () => { //rewrite descriptions?
         })
     })
 
+    it('should handle URL-encoded query parameters', async () => {
+        const response = await request(app)
+            .get('/media')
+            .query({ name: encodeURIComponent('Pulp Fiction'), type: encodeURIComponent('DVD') });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "response": [
+              {
+                "id": "/media/1",
+                "name": "Pulp Fiction",
+                "type": "DVD",
+                "desc": "Quentin Tarantino's cult classic crime film."
+              }
+            ]
+          })
+    });
+
 });
 
 describe('GET /media:id', () => {
@@ -362,6 +382,16 @@ describe('POST /media', () => {
         mockStore.errorModeOn = true;
         const response = await request(app).post('/media').send(jsonMedia);
         expect(response.statusCode).toBe(500);
+    })
+
+    it('should allow for a TAPE type to be added', async () => {
+        jsonMedia = {
+            "name": "VHS101",
+            "type": "TAPE",
+            "desc": "Recording of Christmas dinner with family."
+        }
+        const response = await request(app).post('/media').send(jsonMedia);
+        expect(response.statusCode).toBe(201)
     })
 })
 
@@ -528,7 +558,6 @@ describe('DELETE /media/:id', () => {
     })
 })
 
-
 describe('validation', () => {
     it('tests with incorrect argument length', () => {
         const mockExit = jest.spyOn(process, 'exit').mockImplementation((number) => { throw new Error('process.exit: ' + number); });
@@ -550,7 +579,6 @@ describe('validation', () => {
         mockExit.mockRestore();
     })
 
-    //test ASCII etc, then test other things together (unit vs whatever the other one was)
     it('tests ASCII functionality', () => {
         expect(validator.validateASCII("The Northµman")).toBe(false);
     })
@@ -569,13 +597,10 @@ describe('validation', () => {
           }
         ]
         const idsSet = await validator.populateStore(jsonMedia);
-        //Starts off at index 20 because initial 0-19 values have been loaded
         expect(idsSet.has(20)).toBe(true); 
         expect(idsSet.has(21)).toBe(true);
         expect(idsSet.has(22)).toBe(false);
     })
 })
-
-//see how these route handlers work with one another i.e. calling delete then get or put, etc..
 
 //difficult to track console.log output
