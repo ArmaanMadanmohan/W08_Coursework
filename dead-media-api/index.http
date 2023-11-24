@@ -1,4 +1,4 @@
-# PUT http://localhost:23720/media/21 HTTP/1.1
+# PUT http://localhost:23720/media/10 HTTP/1.1
 # content-type: application/json
 
 # {
@@ -7,14 +7,36 @@
 #     "desc": "Psychological thriller starring Willem Dafoe and Robert Pattinson"
 # }
 
-# GET http://localhost:23720/media/19
+# GET http://localhost:23720/media?type=DVD&name=Fight%20CLUB
 
-POST http://localhost:23720/transfer HTTP/1.1
-content-type: application/json
+# POST http://localhost:23720/transfer HTTP/1.1
+# content-type: application/json
 
-{
-    "source": "/media/0",
-    "target": "https://am679.teaching.cs.st-andrews.ac.uk:23720/media"
-}
+# {
+#     "source": "/media/7", 
+#     "target": "http://localhost:23720/media"
+# }
 
-# GET  http://localhost:23720/media?type=DVD&limit=5&offset=9
+# GET http://localhost:23720/media?type=dvd&name=trainspotting&desc=british
+
+# validation check for making sure they input /media/number
+
+# POST http://localhost:23720/transfer HTTP/1.1
+# content-type: application/json
+
+# {
+#     "source": "hidwhdw/media/400", 
+#     "target": "http://localhost:23720/media"
+# }
+
+# GET http://localhost:23720/media/14
+
+# GET  http://localhost:23720/media?offset=2
+
+# GET http://localhost:23720/media
+
+# DELETE http://localhost:23720/media/0
+
+//if its greater than count
+//negative offset for previous (when limit is greater than offset) means limit is changed to minimum
+//if offset - limit < 0, then change offset to 0 and limit to old offset
