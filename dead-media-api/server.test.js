@@ -610,12 +610,4 @@ describe('validation', () => {
         expect(idsSet.has(21)).toBe(true);
         expect(idsSet.has(22)).toBe(false);
     }) 
-
-    //invalid json
-
-    //error mode on populating store
 })
-
-//difficult to track console.log output
-
-//--verbose  
