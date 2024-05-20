@@ -56,7 +56,7 @@ class ServerHandler {
             } else {
                 next();
             }
-        })
+        });
 
         // GET endpoint for retrieving media objects with optional query parameters
         app.get('/media', async (req, res) => {
@@ -103,7 +103,7 @@ class ServerHandler {
                 res.status(500).send();
                 return;
             }
-        })
+        });
 
         // GET endpoint for retrieving a single media object by ID
         app.get('/media/:id', async (req, res) => {
@@ -119,7 +119,7 @@ class ServerHandler {
             } catch (error) {
                 res.status(500).send();
             }
-        })
+        });
 
         // PUT endpoint for updating a media object by ID
         app.put('/media/:id', async (req, res) => {
@@ -143,7 +143,7 @@ class ServerHandler {
             } catch (error) {
                 res.status(500).send();
             }
-        })
+        });
 
         // DELETE endpoint for deleting a media object by ID
         app.delete('/media/:id', async (req, res) => {
@@ -159,7 +159,7 @@ class ServerHandler {
             } catch (error) {
                 res.status(500).send();
             }
-        })
+        });
 
         // POST endpoint for creating a new media object
         app.post('/media', async (req, res) => {
@@ -178,7 +178,7 @@ class ServerHandler {
             } catch (error) {
                 res.status(500).send();
             }
-        })
+        });
 
         // POST endpoint for transferring a media object to another server
         app.post('/transfer', async (req, res) => {
@@ -223,7 +223,7 @@ class ServerHandler {
                     res.status(500).send();
                 }
             }
-        })
+        });
 
         return app;
     }
